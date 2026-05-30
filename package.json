@@ -1,0 +1,13 @@
+{
+  "name": "pi-tool-transparency",
+  "version": "1.0.0",
+  "description": "Pi extension — require LLM to state purpose before each tool call, block unstated calls",
+  "license": "MIT",
+  "author": "gengcheng",
+  "type": "module",
+  "main": "tool-transparency.ts",
+  "keywords": ["pi", "pi-extension", "tool", "transparency", "purpose", "guardrail"],
+  "pi": { "extensions": ["./tool-transparency.ts"] },
+  "files": ["tool-transparency.ts", "LICENSE", "README.md"],
+  "repository": { "type": "git", "url": "https://github.com/gengcheng/pi-tool-transparency" }
+}
