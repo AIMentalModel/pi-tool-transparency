@@ -1,12 +1,13 @@
 {
   "name": "pi-tool-transparency",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Pi extension \u2014 require purpose before tool calls, show purpose in widget panel",
   "license": "MIT",
   "author": "gengcheng",
   "type": "module",
   "main": "tool-transparency.ts",
   "keywords": [
+    "pi-package",
     "pi",
     "pi-extension",
     "tool",
