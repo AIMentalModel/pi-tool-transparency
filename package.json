@@ -1,7 +1,7 @@
 {
   "name": "pi-tool-transparency",
-  "version": "1.0.0",
-  "description": "Pi extension \u2014 require LLM to state purpose before each tool call, block unstated calls",
+  "version": "2.0.0",
+  "description": "Pi extension \u2014 require purpose before tool calls, show purpose in widget panel",
   "license": "MIT",
   "author": "gengcheng",
   "type": "module",

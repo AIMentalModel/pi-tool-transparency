@@ -4,7 +4,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
  * 工具透明约束扩展。
  * - 注入系统提示词，要求 LLM 在工具调用前写【目的】
  * - 拦截未说明目的的工具调用
- * - 工具执行时在状态栏显示目的文本
+ * - 工具执行时在 widget 面板展示目的，与工具调用融为一体
  */
 export default function (pi: ExtensionAPI) {
   let reasoningText = "";
@@ -34,10 +34,8 @@ export default function (pi: ExtensionAPI) {
     if (text.length > 10) reasoningText = text;
   });
 
-  // 拦截 + 状态栏显示目的
   pi.on("tool_call", async (event, ctx) => {
     if (!messageStarted) return;
-
     if (!reasoningText) {
       return {
         block: true,
@@ -45,17 +43,29 @@ export default function (pi: ExtensionAPI) {
       };
     }
 
-    // 在状态栏显示目的（截取前 80 字）
-    if (ctx.hasUI) {
-      const snippet = reasoningText.replace(/\n/g, " ").slice(0, 80);
-      ctx.ui.setStatus("tool-purpose", `📌 ${event.toolName}: ${snippet}`);
-    }
+    if (!ctx.hasUI) return;
+
+    const snippet = reasoningText.replace(/\n/g, " ").slice(0, 80);
+    const purpose = extractPurpose(reasoningText);
+
+    ctx.ui.setWidget("tool-purpose", [
+      `🔧 ${event.toolName}`,
+      purpose ? `📌 ${purpose}` : `📌 ${snippet}`,
+    ]);
   });
 
-  // 工具执行完后清除状态
   pi.on("tool_execution_end", async (_event, ctx) => {
-    if (ctx.hasUI) ctx.ui.setStatus("tool-purpose", undefined);
+    if (!ctx.hasUI) return;
+    setTimeout(() => {
+      ctx.ui.setWidget("tool-purpose", undefined);
+    }, 2000);
   });
+}
+
+/** 从文本中提取【目的】后面的内容 */
+function extractPurpose(text: string): string {
+  const match = text.match(/【目的】\s*(.+?)(?:【|$)/);
+  return match ? match[1].trim().slice(0, 60) : "";
 }
 
 function extractText(content: unknown): string {
